@@ -1,0 +1,45 @@
+.menuWrapper {
+  width: 20vw;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .menu {
+    width: 100%;
+
+    border-radius: 15px;
+    overflow: hidden;
+  
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      padding: 10px 20px;
+      background-color: var(--main-color);
+    }
+  }
+
+  .desc {
+    width: 100%;
+
+    min-height: 40px;
+    box-sizing: border-box;
+    background-color: #333d;
+
+    padding: 15px 20px;
+    
+    border-radius: 15px;
+
+    font-size: 16px;
+    font-weight: 400;
+
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}

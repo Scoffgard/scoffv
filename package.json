@@ -1,0 +1,28 @@
+{
+  "name": "scoffv",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Scoffgard",
+  "type": "commonjs",
+  "scripts": {
+    "windows": "ragemp-server.exe",
+    "linux": "./ragemp-server",
+    "windows:update": "update.bat",
+    "linux:update": "./update.sh",
+
+    "cef:dev": "cd CEF && npm run dev",
+    "cef:build": "cd CEF && npm run build",
+
+    "discord:start": "cd discord && npm run start",
+    "discord:dev": "cd discord && npm run dev"
+  },
+  "devDependencies": {
+    "@ragempcommunity/types-client": "^2.1.9",
+    "@ragempcommunity/types-server": "^2.1.9"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "ws": "^8.20.0"
+  }
+}

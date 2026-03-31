@@ -1,0 +1,63 @@
+.notifsWrapper {
+  display: flex;
+  flex-direction: column;
+
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 15vw;
+
+  gap: 10px;
+
+  .notif {
+    background-color: #555b;
+    border: 2px solid #333b;
+    border-radius: 15px;
+    padding: 10px 20px;
+
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 1s ease;
+
+    &.red {
+      background-color: #c55b;
+      border-color: #c33b;
+    }
+    &.green {
+      background-color: #5c5b;
+      border-color: #3c3b;
+    }
+    &.blue {
+      background-color: #55cb;
+      border-color: #33cb;
+    }
+    &.yellow {
+      background-color: #cc5b;
+      border-color: #cc3b;
+    }
+
+    .content {
+      overflow: hidden;
+    }
+
+    &.deleting {
+      animation: deletingAnim 1s forwards;
+    }
+  }
+}
+
+@keyframes deletingAnim {
+  0% {
+    grid-template-rows: 1fr;
+    padding: 10px 20px;
+    opacity: 1;
+    margin-bottom: 0;
+  }
+  100% {
+    grid-template-rows: 0fr;
+    padding: 0px 20px;
+    opacity: 0;
+    margin-bottom: -10px;
+  }
+}

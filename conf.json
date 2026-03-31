@@ -1,0 +1,7 @@
+{
+  "announce": false,
+  "gamemode": "freeroam", 
+  "name": "ScoffV - Development Server", 
+  "maxplayers": 100,
+  "allow-cef-debugging": true
+}

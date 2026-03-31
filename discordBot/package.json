@@ -1,0 +1,21 @@
+{
+  "name": "scoffv-discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Scoffgard",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.3.1",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

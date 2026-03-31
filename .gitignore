@@ -1,0 +1,16 @@
+.env*
+node_modules
+package-lock.json
+.vscode
+bin/*
+!bin/.gitkeep
+
+client_packages/main/html/*
+!client_packages/main/html/.gitkeep
+client_packages/.listcache
+
+BugTrap-x64.dll
+ragemp-server.exe
+ragemp-server
+
+./dev

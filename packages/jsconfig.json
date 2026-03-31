@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "types": ["@ragempcommunity/types-server"],
+    "checkJs": false
+  },
+  "include": ["**/*.js"]
+}
