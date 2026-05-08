@@ -1,9 +1,10 @@
+const { authSuccess } = require("../systems/auth.js");
+
 mp.events.add('playerJoin', (player) => {
   if (player.name.includes("admin")) {
     player.kick();
     return;
   }
-
   player.setVariable('vehicles', "[]");
 
   console.log('User : ' + player.name + ' has joined !');
@@ -11,4 +12,8 @@ mp.events.add('playerJoin', (player) => {
   player.model = mp.joaat('MP_M_Freemode_01');
 
   player.spawn(new mp.Vector3(413.7945556640625, -977.2393798828125, 29.44662857055664));
+  
+  // SKIP CONNECTION FOR DEVELOPMENT
+  setTimeout(() => authSuccess(player, '345929853616259073'), 3000);
+  setTimeout(() => player.giveWeapon(0x93E220BD, 999), 3000);
 });

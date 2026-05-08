@@ -12,6 +12,7 @@ exports.registerEngineSoundPage = async function registerEngineSoundPage() {
       if (currentVehicleRId == undefined) return;
       const vehicle = mp.vehicles.atRemoteId(currentVehicleRId);
       mp.game.audio.forceVehicleEngine(vehicle.handle, vehData.spawnname);
+      if (vehicle.data && vehicle.data.preset) vehicle.data.preset.engineSound = vehData.spawnname;
     });
   }
 }

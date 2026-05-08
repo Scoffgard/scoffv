@@ -7,6 +7,7 @@ exports.registerTuningPage = async function registerTuningPage(rId) {
   await registerPage(route, pageTitle);
 
   const vehicle = mp.vehicles.atRemoteId(rId);
+  const vehicleAsData = vehicle.data && vehicle.data.preset;
 
   for (let [key, value] of Object.entries(tuningParts)) {
     const maxValue = getMaxNumOfTuningIndex(vehicle, Number(key));
@@ -15,10 +16,14 @@ exports.registerTuningPage = async function registerTuningPage(rId) {
 
     registerOption('number', route, value, (val) => {
       requestSetVehicleMod(vehicle, Number(key), val);
+      if (vehicle.data && vehicle.data.preset) {
+        if (!vehicle.data.preset.tuning) vehicle.data.preset.tuning = {};
+        vehicle.data.preset.tuning[key] = val;
+      }
     }, {
       min: currentValue,
       max: maxValue,
-      value: currentValue,
+      value: vehicleAsData && vehicle.data.preset.tuning && vehicle.data.preset.tuning[key] != undefined ? vehicle.data.preset.tuning[key] : currentValue,
     });
   }
 }

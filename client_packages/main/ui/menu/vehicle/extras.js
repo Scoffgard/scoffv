@@ -6,6 +6,7 @@ exports.registerExtrasPage = async function registerExtrasPage(rId) {
   await registerPage(route, pageTitle);
 
   const vehicle = mp.vehicles.atRemoteId(rId);
+  const vehicleAsData = vehicle.data && vehicle.data.preset;
 
   const extras = [];
   for (let i = 0; i <= 16; i++) {
@@ -15,6 +16,10 @@ exports.registerExtrasPage = async function registerExtrasPage(rId) {
   for (let extraId of extras) {
     registerOption('checkbox', route, `Extra #${extraId}`, (val) => {
       vehicle.setExtra(extraId, val);
-    }, { value: vehicle.isExtraTurnedOn(extraId) })
+      if (vehicle.data && vehicle.data.preset) {
+        if (!vehicle.data.preset.extras) vehicle.data.preset.extras = {};
+        vehicle.data.preset.extras[extraId] = val;
+      }
+    }, { value: vehicleAsData && vehicle.data.preset.extras && vehicle.data.preset.extras[extraId] != undefined ? vehicle.data.preset.extras[extraId] : vehicle.isExtraTurnedOn(extraId) })
   }
 }
