@@ -6,6 +6,13 @@ export async function authReply(interaction) {
   if (!interaction.user.dmChannel) await interaction.user.createDM();
   const message = await interaction.user.dmChannel.messages.fetch(interaction.message.id);
   message.delete();
-  if (globalThis.wsClient) globalThis.wsClient.client.send(JSON.stringify({success: true, type: 'auth', accept, playerId}));
+  if (globalThis.wsClient) 
+    globalThis.wsClient.client.send(JSON.stringify({
+      success: true,
+      type: 'auth',
+      accept,
+      playerId,
+      discordId: interaction.user.id,
+    }));
   interaction.reply({content: `Connection ${accept ? 'accepted' : 'refused'}`, flags: MessageFlags.Ephemeral});
 }
