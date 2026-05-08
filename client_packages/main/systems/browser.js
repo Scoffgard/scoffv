@@ -72,15 +72,37 @@ exports.registerOption = function registerOption(type, route, label, interactFun
 }
 
 /**
+ * Mutate an option on a page of the CEF menu
+ * @param {String} iden Value to do the check on
+ * @param {any} val Value of the iden where element should be mutated
+ * @param {string} route Route of the page to mutate option
+ * @param {('link' | 'confirm' | 'button' | 'checkbox' | 'input' | 'number' | 'color' | 'divider')} type Type of the option to create
+ * @param {string} label Label of the option
+ * @param {Function} interactFunction Function called when option is interacted with (can return value if appliable), null if no callback is needed
+ * @param {Object} options Options to pass to the option
+ */
+exports.mutateOption = function mutateOption(iden, val, route, type, label, interactFunction, options = {}) {
+  const browser = mp.players.local.data.browser;
+  
+  const eventName = `${route}-${type}-${label.replace(/[^a-zA-Z0-9]/g, '')}`;
+  
+  browser.call('browser:menu:mutateOption', route, iden, val, type, label, eventName, JSON.stringify(options));
+  
+  if (interactFunction) callbacks[eventName] = interactFunction;
+}
+
+/**
  * Create a notification in CEF to display message to user
  * @param {string} content The text to show
  * @param {('red' | 'green' | 'blue' | 'yellow')} color The color of the notification
  * @param {number} delay The delay to delete notification 
  */
-exports.sendNotification = function sendNotification(content, color = '', delay = 3) {
+function sendNotification(content, color = '', delay = 3) {
   const browser = mp.players.local.data.browser;
   browser.call('browser:notif:send', content, color, delay);
 }
+mp.events.add('hud:notification', sendNotification);
+exports.sendNotification = sendNotification;
 
 /**
  * Navigate in the menu
@@ -100,4 +122,15 @@ exports.navigate = function navigate(route, back = false) {
 exports.deletePage = function deletePage(route, linkRoute) {
   const browser = mp.players.local.data.browser;
   browser.call('browser:menu:deletePage', route, linkRoute);
+}
+
+/**
+ * Delete an option from specified page with specific value on an identificator
+ * @param {String} route Route of the element
+ * @param {String} iden Value to do the check on
+ * @param {any} val Value of the iden where element should be deleted
+ */
+exports.deleteOption = function deleteOption(route, iden, val) {
+  const browser = mp.players.local.data.browser;
+  browser.call('browser:menu:deleteOption', route, iden, val);
 }
