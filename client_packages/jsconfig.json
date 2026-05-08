@@ -2,11 +2,10 @@
   "compilerOptions": {
     "types": ["@ragempcommunity/types-client"],
     "checkJs": false,
-    "baseUrl": ".",
     "module": "commonjs",
 
     "paths": {
-      "*": ["*"]
+      "*": ["./*"]
     }
   },
   "include": ["**/*.js"]
