@@ -10,12 +10,10 @@
     "linux": "./ragemp-server",
     "windows:update": "update.bat",
     "linux:update": "./update.sh",
-
     "cef:dev": "cd CEF && npm run dev",
     "cef:build": "cd CEF && npm run build",
-
-    "discord:start": "cd discord && npm run start",
-    "discord:dev": "cd discord && npm run dev"
+    "discord:start": "cd discordBot && npm run start",
+    "discord:dev": "cd discordBot && npm run dev"
   },
   "devDependencies": {
     "@ragempcommunity/types-client": "^2.1.9",
@@ -23,6 +21,7 @@
   },
   "dependencies": {
     "dotenv": "^17.3.1",
+    "mysql": "^2.18.1",
     "ws": "^8.20.0"
   }
 }
