@@ -17,6 +17,8 @@ export default function Menu(props) {
   const [currentOption, setCurrentOption] = useState(0);
 
   const [currentScroll, setCurrentScroll] = useState(0);
+
+  const [pageMin, setPageMin] = useState(0);
   
   const [localHistory, setLocalHistory] = useState([]);
 
@@ -60,7 +62,7 @@ export default function Menu(props) {
         //   'type': 'input',
         //   'label': 'Select me to enter some text',
         //   'value': 'reger',
-        //   // 'regexMatch': /[a-zA-Z]/,
+        // //   'regexMatch': /[a-zA-Z]/,
         //   'eventName': 'browser:menu-interact:home-input-Selectmetoentersometext',
         // },
         // {
@@ -125,6 +127,7 @@ export default function Menu(props) {
     let options = [];
     for (let index = currentScroll; index <= maxValuesByPage+currentScroll && index < page.options.length; index++) {
       let option = page.options[index]
+      if (option.default && page.options.length !== 1) continue;
       options.push(
         <MenuOption 
           key={`${currentPage}-${index}`}
@@ -151,7 +154,7 @@ export default function Menu(props) {
   const moveOption = (optionSelected, currentOption, currentScroll, way) => {
     if (way == -1) {
       if (optionSelected.type === 'input' && optionSelected.focus) return;
-      if (currentOption == 0) {
+      if (currentOption == pageMin) {
         setCurrentOption(pages[currentPage].options.length-1);
         if (pages[currentPage].options.length-1 >= maxValuesByPage)
           setCurrentScroll(pages[currentPage].options.length-1-maxValuesByPage);
@@ -166,9 +169,9 @@ export default function Menu(props) {
     } else {
       if (optionSelected.type === 'input' && optionSelected.focus) return;
       if (currentOption == pages[currentPage].options.length-1) {
-        setCurrentOption(0);
-        setCurrentScroll(0);
-        return {option: 0, scroll: 0};
+        setCurrentOption(pageMin);
+        setCurrentScroll(pageMin);
+        return {option: pageMin, scroll: pageMin};
       }
       else setCurrentOption(currentOption+1);
       if (currentOption >= currentScroll + maxValuesByPage) {
@@ -182,8 +185,13 @@ export default function Menu(props) {
   const navigate = (page, back = false) => {
     if (!pages[page]) return;
 
-    setCurrentOption(0);
-    setCurrentScroll(0);
+    const isDefaultInPage = !!pages[page].options.filter(o => o.default)[0];
+    const isDefaultHidden = isDefaultInPage && pages[page].options.length !== 1;
+    
+    setPageMin(isDefaultHidden ? 1 : 0);
+    setCurrentOption(isDefaultHidden ? 1 : 0);
+    setCurrentScroll(isDefaultHidden ? 1 : 0);
+
     setTitle(pages[page].title);
     setCurrentPage(page);
 
@@ -223,6 +231,26 @@ export default function Menu(props) {
     setPages(newPages);
   }
 
+  const deleteOption = (route, iden, val) => {
+    const newPages = {...pages};
+    window.mp.events.call('browser:debug', `${iden}, ${val}`);
+    newPages[route].options = newPages[route].options.filter(o => o[iden] != val);
+    setPages(newPages);
+  }
+
+  const mutateOption = (route, iden, val, type, label, eventName, optionProps = {}) => {
+    const newPages = {...pages};
+    const previousIndex = newPages[route].options.findIndex(o => o[iden] == val);
+    if (previousIndex == -1) return;
+    newPages[route].options[previousIndex] = {
+      type,
+      label,
+      eventName,
+      ...JSON.parse(optionProps),
+    };
+    setPages(newPages);
+  }
+
   const clearOptions = (route) => {
     const newPages = {...pages};
     newPages[route].options = [];
@@ -238,12 +266,16 @@ export default function Menu(props) {
       window.mp.events.add('browser:menu:registerPage', registerPage);
       window.mp.events.add('browser:menu:registerOption', registerOption);
       window.mp.events.add('browser:menu:deletePage', deletePage);
+      window.mp.events.add('browser:menu:deleteOption', deleteOption);
+      window.mp.events.add('browser:menu:mutateOption', mutateOption);
       window.mp.events.add('browser:menu:clearOptions', clearOptions);
       window.mp.events.add('browser:menu:navigate', navigate);
       return () => {
         window.mp.events.remove('browser:menu:registerPage', registerPage);
         window.mp.events.remove('browser:menu:registerOption', registerOption);
         window.mp.events.remove('browser:menu:deletePage', deletePage);
+        window.mp.events.remove('browser:menu:deleteOption', deleteOption);
+        window.mp.events.remove('browser:menu:mutateOption', mutateOption);
         window.mp.events.remove('browser:menu:clearOptions', clearOptions);
         window.mp.events.remove('browser:menu:navigate', navigate);
       }
@@ -268,11 +300,21 @@ export default function Menu(props) {
           newOption = moveOption(optionSelected, currentOption, currentScroll, 1);
           if (newOption != undefined && pages[currentPage].options[newOption.option].type === 'divider')
             moveOption(pages[currentPage].options[newOption.option], newOption.option, newOption.scroll, 1);
+          if (optionSelected.type == 'confirm' && optionSelected.focus === true) {
+            const newPages = {...pages};
+            newPages[currentPage].options[currentOption].focus = false;
+            setPages(newPages);
+          }
           break;
         case 'ArrowUp': 
           newOption = moveOption(optionSelected, currentOption, currentScroll, -1);
           if (newOption != undefined && pages[currentPage].options[newOption.option].type === 'divider')
             moveOption(pages[currentPage].options[newOption.option], newOption.option, newOption.scroll, -1);
+          if (optionSelected.type == 'confirm' && optionSelected.focus === true) {
+            const newPages = {...pages};
+            newPages[currentPage].options[currentOption].focus = false;
+            setPages(newPages);
+          }
           break;
         case 'ArrowRight': 
           if (optionSelected.type == 'number') {
@@ -313,7 +355,7 @@ export default function Menu(props) {
           if (optionSelected.type == 'input' || optionSelected.type == 'color') {
             const newPages = {...pages};
             if (!optionSelected.focus) {
-              if (optionSelected.type != 'color') newPages[currentPage].options[currentOption].value = '';
+              if (optionSelected.type != 'color' && !optionSelected.preserveValue) newPages[currentPage].options[currentOption].value = '';
               if (window.mp) mp.events.call('browser:menu:lockControls', true);
               if (window.mp && optionSelected.type == 'color') mp.events.call('browser:menu:lockMouse', true);
             } else if (window.mp) {
@@ -381,7 +423,7 @@ export default function Menu(props) {
     return () => {
       window.removeEventListener('keydown', keydownEvent);
     }
-  }, [currentPage, currentOption, localHistory, pages, menuState, currentScroll]);
+  }, [currentPage, currentOption, localHistory, pages, menuState, currentScroll, pageMin]);
 
   return (
     <div className={`menuWrapper ${menuState ? '' : 'hidden'}`}>
