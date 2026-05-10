@@ -1,13 +1,20 @@
 # ScoffV
-ScoffV is a multiplayer server on RageMP.
-The project is still on development.
+ScoffV is a multiplayer server on RageMP.<br>
+**The project is still on development.**
 
 For informations on the sub projects (CEF, discord, etc...) check they respective README.md
 
 # Setup
-.env (required)
+**All the following steps are mandatory and should be done before first launch for the server to work**
+
+Create a database for the server (only MySQL supported). Then run the sql file : `baseDatabase.sql`
+
+The create the file `.env` in the root directory of your server and populate it as follows :
 ```env
 WS_TOKEN=<secure token to communicate with discord bot, needs to be the same as ./discord/.env>
+DB_HOST=<uri of your mysql database>
+DB_USER=<username to connect to your mysql database>
+DB_PASS=<password to connect to your mysql database>
 ```
 
 # Disclaimers
