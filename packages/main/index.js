@@ -7,6 +7,7 @@ require('./events/vehicleDeath.js');
 require('./systems/vehicle.js');
 require('./systems/auth.js');
 require('./systems/database.js');
+require('./systems/noClip.js');
 
 // DISCORD
 require('./discord/main.js');
