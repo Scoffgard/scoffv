@@ -13,31 +13,33 @@ mp.events.add('noclip:toggle', (player, state) => {
 
 // The application of the movement due to no clip
 mp.events.add('noclip:movement', async (player, way, movementSpeed, heading) => {
+  const entity = player.vehicle || player;
   switch (way) {
     case 'up': 
-      await lerpPosition(player, 'z', +movementSpeed, 100, lerpDefinition);
+      await lerpPosition(entity, 'z', +movementSpeed, 100, lerpDefinition);
       break;
     case 'down':
-      await lerpPosition(player, 'z', -movementSpeed, 100, lerpDefinition);
+      await lerpPosition(entity, 'z', -movementSpeed, 100, lerpDefinition);
       break;
     case 'forward':
-      moveWithRotation(player, new Vector2(0, movementSpeed), heading);
+      moveWithRotation(entity, new Vector2(0, movementSpeed), heading);
       break;
     case 'back':
-      moveWithRotation(player, new Vector2(0, -movementSpeed), heading);
+      moveWithRotation(entity, new Vector2(0, -movementSpeed), heading);
       break;
     case 'left':
-      moveWithRotation(player, new Vector2(-movementSpeed, 0), heading);
+      moveWithRotation(entity, new Vector2(-movementSpeed, 0), heading);
       break;
     case 'right':
-      moveWithRotation(player, new Vector2(movementSpeed, 0), heading);
+      moveWithRotation(entity, new Vector2(movementSpeed, 0), heading);
       break;
   }
 });
 
 // Event to be called with the distance to ground of the player
 mp.events.add('noclip:placeOnGround', (player, zOffset) => {
-  player.position = mutateVector(player.position, 'z', -(zOffset-1));
+  const entity = player.vehicle || player;
+  entity.position = mutateVector(entity.position, 'z', -(zOffset-1));
 });
 
 /**
@@ -57,28 +59,28 @@ function mutateVector(baseVector, axis, addition) {
 
 /**
  * Move a player based on a Vector2 modified by the heading (rotation on Z axis)
- * @param {mp.player} player The player to movement
+ * @param {mp.entity} entity The entity to movement
  * @param {Vector2} baseVector The base movement Vector2
  * @param {number} heading In degrees, the rotation around the Z axis
  */
-function moveWithRotation(player, baseVector, heading) {
+function moveWithRotation(entity, baseVector, heading) {
   const newDisplacementVector = baseVector.rotate(-heading);
-  lerpPosition(player, 'x', newDisplacementVector.x, 100, lerpDefinition);
-  lerpPosition(player, 'y', newDisplacementVector.y, 100, lerpDefinition);
+  lerpPosition(entity, 'x', newDisplacementVector.x, 100, lerpDefinition);
+  lerpPosition(entity, 'y', newDisplacementVector.y, 100, lerpDefinition);
 }
 
 /**
  * Move the player on an axis for specified amount. Render it smooth by lerping the movement over time
- * @param {mp.player} player The player to move
+ * @param {mp.entity} entity The entity to move
  * @param {('x' | 'y' | 'z')} axis The axis regarding the movement
  * @param {number} totalMovement The total amount of movement to be done
  * @param {number} time In ms, the time to perform the lerp on
  * @param {number} steps How many submovements should be done
  */
-async function lerpPosition(player, axis, totalMovement, time, steps) {
+async function lerpPosition(entity, axis, totalMovement, time, steps) {
   for (let i = 0; i < steps; i++) {
     const localMovement = totalMovement/steps;
-    player.position = mutateVector(player.position, axis, localMovement);
+    entity.position = mutateVector(entity.position, axis, localMovement);
     await wait(time/steps);
   } 
 }

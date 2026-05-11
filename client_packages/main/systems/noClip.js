@@ -1,3 +1,5 @@
+const { sendNotification } = require("main/systems/browser.js");
+
 const defaultNoClipSpeed = 2.5;
 
 const wayLookupTable = {
@@ -11,6 +13,9 @@ const wayLookupTable = {
 
 exports.toggleNoClip = function toggleNoClip() {
   const player = mp.players.local;
+  
+  if (player.vehicle && !player.vehicle.isStopped()) return sendNotification('You cannot use NoClip while you\'re moving', 'red', 3);
+
   if (!player.data) player.data = {};
   if (player.data.noClip != undefined) player.data.noClip = !player.data.noClip;
   else player.data.noClip = true; 
@@ -19,13 +24,15 @@ exports.toggleNoClip = function toggleNoClip() {
 
   if (player.data.noClip) {
     player.data.noClipSpeed = defaultNoClipSpeed;
-    player.freezePosition(true);
+    if (!player.vehicle) player.freezePosition(true);
+    else player.vehicle.setCollision(false, false);
     mp.game.weapon.setPedCurrentVisible(player.handle, false, false, false, false);
     player.setCanSwitchWeapon(false);
     player.data.noClipPrevCam = mp.game.cam.getFollowPedViewMode();
     mp.game.cam.setFollowPedCamViewMode(0);
   } else {
-    player.freezePosition(false);
+    if (!player.vehicle) player.freezePosition(false);
+    else player.vehicle.setCollision(true, true);
     mp.game.weapon.setPedCurrentVisible(player.handle, true, false, false, false);
     player.setCanSwitchWeapon(true);
     mp.game.cam.setFollowPedCamViewMode(player.data.noClipPrevCam || 1);
