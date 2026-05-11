@@ -55,7 +55,7 @@ exports.registerPage = function registerPage(route, title) {
 
 /**
  * Create an option for a page and adds it to the CEF menu
- * @param {('link' | 'confirm' | 'button' | 'checkbox' | 'input' | 'number' | 'color' | 'divider')} type Type of the option to create
+ * @param {('link' | 'confirm' | 'button' | 'checkbox' | 'input' | 'number' | 'color' | 'divider' | 'option')} type Type of the option to create
  * @param {string} route Route of the page to add option
  * @param {string} label Label of the option
  * @param {Function} interactFunction Function called when option is interacted with (can return value if appliable), null if no callback is needed

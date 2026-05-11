@@ -328,6 +328,18 @@ export default function Menu(props) {
 
             if (window.mp) mp.events.call('browser:menu-interact', optionSelected.eventName, optionSelected.value);
           }
+          if (optionSelected.type == 'option') {
+            const newPages = {...pages};
+
+            const currentIndex = optionSelected.availableOptions.indexOf(optionSelected.value);
+            if (currentIndex == -1) newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[0];
+            else if (currentIndex+1 >= optionSelected.availableOptions.length) newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[0];
+            else newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[currentIndex+1];
+
+            setPages(newPages);
+            
+            if (window.mp) mp.events.call('browser:menu-interact', optionSelected.eventName, optionSelected.value);
+          }
           break;
         case 'ArrowLeft': 
           if (optionSelected.type == 'number') {
@@ -339,6 +351,18 @@ export default function Menu(props) {
             newPages[currentPage].options[currentOption].value = newVal;
             setPages(newPages);
 
+            if (window.mp) mp.events.call('browser:menu-interact', optionSelected.eventName, optionSelected.value);
+          }
+          if (optionSelected.type == 'option') {
+            const newPages = {...pages};
+
+            const currentIndex = optionSelected.availableOptions.indexOf(optionSelected.value);
+            if (currentIndex == -1) newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[0];
+            else if (currentIndex-1 < 0) newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[optionSelected.availableOptions.length-1];
+            else newPages[currentPage].options[currentOption].value = optionSelected.availableOptions[currentIndex-1];
+            
+            setPages(newPages);
+            
             if (window.mp) mp.events.call('browser:menu-interact', optionSelected.eventName, optionSelected.value);
           }
           break;

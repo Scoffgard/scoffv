@@ -64,6 +64,13 @@ export default function MenuOption(props) {
           <span className={`next ${props.max == props.value && !props.allowRotation ? 'grayed' : ''}`}><ArrowForwardSvg /></span>
         </span>
       }
+      {props.type == 'option' &&
+        <span className="right">
+          <span className={`prev`}><ArrowForwardSvg className="mirror" /></span>
+          <span className="value">{props.value}</span>
+          <span className={`next`}><ArrowForwardSvg /></span>
+        </span>
+      }
       {(props.type == 'color') &&
         (props.focus ?
           <>
