@@ -1,6 +1,8 @@
 
 mp.events.add('render', () => {
   const player = mp.players.local;
+  const browser = player.data.browser;
+
   if (player.data.lockControls) {
     mp.game.controls.disableAllControlActions(0);
     mp.game.controls.disableControlAction(32, 80, true);
@@ -28,4 +30,24 @@ mp.events.add('render', () => {
     if (mp.game.controls.getDisabledControlNormal(0, 241) > 0 && player.data.noClipSpeed > 0.2) player.data.noClipSpeed = player.data.noClipSpeed-0.1;
     if (mp.game.controls.getDisabledControlNormal(0, 242) > 0 && player.data.noClipSpeed < 100) player.data.noClipSpeed = player.data.noClipSpeed+0.1;
   }
-})
+
+  if (player.vehicle && !player.data.speedoOn) {
+    browser.call('browser:speedo:setState', true);
+    player.data.speedoOn = true;
+  } else if (!player.vehicle && player.data.speedoOn) {
+    browser.call('browser:speedo:setState', false);
+    player.data.speedoOn = false;
+  }
+
+  if (player.vehicle && player.data.speedoOn) {
+    browser.call(
+      'browser:speedo:setSpeed',
+      Math.floor(
+        player.vehicle.getSpeed() *
+        (player.data.speedoMode === 1 ? 2.236936 : 3.6)
+      )
+    );
+    browser.call('browser:speedo:setGear', player.vehicle.gear || 'N');
+    browser.call('browser:speedo:setRPM', player.vehicle.rpm);
+  }
+});
