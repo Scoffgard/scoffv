@@ -12,7 +12,7 @@ exports.registerSpeedometerPage = async function registerSpeedometerPage() {
     mp.storage.data.speedoMode = mode;
     mp.players.local.data.speedoMode = mode;
     mp.players.local.data.browser.call('browser:speedo:setMode', mode);
-  }, {availableOptions: ['KMH', 'MPH'], value: mp.storage.data.speedoMode || 'KMH'});
+  }, {availableOptions: ['KMH', 'MPH'], value: mp.storage.data.speedoMode ? (mp.storage.data.speedoMode === 1 ? 'MPH' : 'KMH') : 'KMH'});
 
   registerOption('option', route, 'Design', (val) => {
     mp.storage.data.speedoDesign = val;
