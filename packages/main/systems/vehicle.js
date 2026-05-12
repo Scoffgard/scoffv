@@ -9,6 +9,8 @@ mp.events.addProc('vehicle:spawn', (player, model, pos) => {
 
   vehicle.setVariable('owner_id', player.id);
 
+  vehicle.controller = player;
+
   return vehicle.id;
 });
 

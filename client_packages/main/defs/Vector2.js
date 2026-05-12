@@ -20,4 +20,4 @@ class Vector2 {
   }
 }
 
-module.exports = Vector2;
+exports.Vector2 = Vector2;
