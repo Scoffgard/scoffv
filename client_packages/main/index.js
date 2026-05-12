@@ -6,3 +6,4 @@ require('./main/events/every100ms.js');
 
 // SYSTEMS
 require('./main/systems/keyBinds.js');
+require('./main/systems/auth.js');

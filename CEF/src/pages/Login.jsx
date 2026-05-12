@@ -4,7 +4,7 @@ import '../styles/pages/Login.scss';
 
 export default function Login(props) {
 
-  const [showLogin, setShowLogin] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
   const [error, setError] = useState('');
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputDisabled, setInputDisabled] = useState(false);

@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user (
   playtime FLOAT,
   last_connection TIMESTAMP,
   auth_level INT(2),
+  connect_token VARCHAR(128),
   sanctions JSON
 );
 

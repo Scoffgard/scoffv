@@ -14,6 +14,5 @@ mp.events.add('playerJoin', (player) => {
   player.spawn(new mp.Vector3(413.7945556640625, -977.2393798828125, 29.44662857055664));
   
   // SKIP CONNECTION FOR DEVELOPMENT
-  setTimeout(() => authSuccess(player, '345929853616259073'), 3000);
   setTimeout(() => player.giveWeapon(0x93E220BD, 999), 3000);
 });

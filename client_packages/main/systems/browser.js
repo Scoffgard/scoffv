@@ -26,7 +26,7 @@ exports.registerBrowser = function registerBrowser() {
 
     mp.events.add('auth:discordLoginError', message => browser.call('browser:login:error', message));
     mp.events.add('auth:discordLoginSuccess', () => {
-      browser.call('browser:login:setState', false)
+      browser.call('browser:login:setState', false);
       
       mp.players.local.data.lockControls = false;
       mp.gui.cursor.show(false, false)
