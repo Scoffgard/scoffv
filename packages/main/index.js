@@ -2,6 +2,7 @@
 require('./events/playerJoin.js');
 require('./events/playerQuit.js');
 require('./events/vehicleDeath.js');
+require('./events/serverShutdown.js');
 
 // SYSTEMS
 require('./systems/vehicle.js');

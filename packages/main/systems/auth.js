@@ -65,6 +65,23 @@ async function authSuccess(player, discordId) {
   player.call('auth:discordLoginSuccess');
 }
 
+async function savePlaytime(dbId) {
+  const [results] = await queryAsync('SELECT playtime, UNIX_TIMESTAMP(last_connection) as last_connection FROM user WHERE id = ?', [dbId]);
+  if (!results[0]) return;
+  const prevDate = (new Date()).setTime(results[0].last_connection * 1000);
+  const currentDate = new Date();
+  const diffMs = (currentDate - prevDate);
+  const diffMins = Math.round(diffMs / 1000 / 60);
+  await queryAsync(
+    'UPDATE user SET playtime = ? WHERE id = ?',
+    [
+      results[0].playtime + diffMins,
+      dbId
+    ]
+  );
+}
+
 module.exports = {
   authSuccess,
+  savePlaytime,
 }
